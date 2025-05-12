@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login & Signup - Permainan Batu Air Cawan</title> <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    html, body {
+      height: 100%; width: 100%;
+      display: flex; flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: url('night.jpg') no-repeat center center fixed; /* Pastikan imej 'night.jpg' ada */
+      background-size: cover;
+      text-align: center;
+    }
+
+    .page-title {
+      font-size: 32px;
+      color: #fff;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+      margin-bottom: 40px; /* Dikurangkan sedikit margin bottom */
+      margin-top: 20px; /* Ditambah sedikit margin top */
+    }
+
+    .wrapper {
+      width: 390px; background: rgba(255, 255, 255, 0.95); /* Sedikit lutsinar */
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 15px 20px rgba(0,0,0,0.2); /* Bayang ditingkatkan sedikit */
+      overflow: hidden;
+    }
+
+    .title-text {
+      display: flex; width: 200%;
+      font-size: 28px; font-weight: 600;
+      transition: margin-left 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+    }
+
+    .title { width: 50%; text-align: center; color: #003366; } /* Warna teks tajuk */
+
+    .slide-controls {
+      display: flex; position: relative;
+      height: 50px; width: 100%; margin: 30px 0 10px;
+      border: 1px solid lightgrey; border-radius: 15px;
+      overflow: hidden;
+    }
+
+    .slide {
+      width: 100%; text-align: center;
+      line-height: 48px; font-size: 18px; font-weight: 500;
+      cursor: pointer; z-index: 1;
+      transition: color 0.3s ease;
+      color: #333; /* Warna teks slide asal */
+    }
+
+    .slider-tab {
+      position: absolute; height: 100%; width: 50%;
+      background: linear-gradient(to right,#003366,#004080,#0059b3,#0073e6);
+      border-radius: 15px; left: 0; z-index: 0;
+      transition: left 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+    }
+
+    input[type="radio"] { display: none; }
+
+    #signup:checked ~ .slider-tab { left: 50%; }
+
+    #signup:checked ~ label.signup,
+    #login:checked ~ label.login {
+      color: #fff; cursor: default;
+    }
+
+    #signup:checked ~ label.login,
+    #login:checked ~ label.signup {
+      color: #333; /* Warna teks untuk tab tidak aktif */
+    }
+
+    .form-container { width: 100%; overflow: hidden; }
+
+    .form-inner {
+      display: flex; width: 200%;
+      /* Transition diuruskan oleh JS sedia ada, tiada perubahan diperlukan di sini */
+    }
+
+    form { width: 50%; }
+
+    .field {
+      height: 50px; width: 100%; margin-top: 20px;
+    }
+
+    .field input {
+      width: 100%; height: 100%;
+      border: 1px solid lightgrey;
+      border-radius: 15px;
+      padding-left: 15px;
+      font-size: 17px;
+      border-bottom-width: 2px;
+      outline: none;
+      transition: border-color 0.3s; /* Diringkaskan transisi */
+    }
+
+    .field input:focus { border-color: #0073e6; } /* Warna fokus diselaraskan dengan gradient */
+    .field input::placeholder { color: #999; }
+
+    .pass-link, .signup-link {
+      margin-top: 10px; text-align: center;
+    }
+
+    .pass-link a, .signup-link a {
+      color: #0073e6; text-decoration: none; /* Warna link diselaraskan */
+    }
+
+    .pass-link a:hover, .signup-link a:hover {
+      text-decoration: underline;
+    }
+
+    .btn {
+      height: 50px; width: 100%;
+      border-radius: 15px; position: relative;
+      overflow: hidden; margin-top: 20px; /* Margin atas untuk butang */
+    }
+
+    .btn-layer {
+      position: absolute; height: 100%; width: 300%; /* Saiz layer dikekalkan */
+      left: -100%; /* Kedudukan awal layer */
+      background: linear-gradient(135deg, #003366, #0073e6); /* Gradient diubah sedikit untuk kesan lebih baik */
+      border-radius: 15px;
+      transition: left 0.4s ease;
+    }
+
+    .btn:hover .btn-layer {
+      left: 0;
+    }
+
+    .btn input[type="submit"] {
+      height: 100%; width: 100%;
+      background: none; border: none;
+      color: #fff; font-size: 20px; font-weight: 500; /* Berat font ditambah */
+      position: relative; z-index: 1;
+      cursor: pointer;
+    }
+
+    .message-area {
+      margin-top: 15px; /* Margin atas ditambah */
+      font-size: 14px;
+      text-align: center;
+      height: 20px; /* Ketinggian tetap untuk mengelakkan anjakan kandungan */
+      color: #003366; /* Warna mesej default */
+    }
+    .message-area.success { color: green; font-weight: bold; }
+    .message-area.error { color: red; font-weight: bold; }
+
+  </style>
+</head>
+<body>
+
+  <h1 class="page-title">Selamat Datang ke Permainan Batu, Air, Cawan</h1>
+
+  <div class="wrapper">
+    <div class="title-text">
+      <div class="title login">Login</div>
+      <div class="title signup">Daftar</div> </div>
+
+    <div class="form-container">
+      <div class="slide-controls">
+        <input type="radio" name="slide" id="loginRadio" checked> <input type="radio" name="slide" id="signupRadio"> <label for="loginRadio" class="slide login">Login</label>
+        <label for="signupRadio" class="slide signup">Daftar</label>
+        <div class="slider-tab"></div>
+      </div>
+
+      <div class="form-inner">
+        <form id="login-form" class="login">
+          <div class="field">
+            <input type="email" id="loginEmail" placeholder="Alamat Emel" required>
+          </div>
+          <div class="field">
+            <input type="password" id="loginPassword" placeholder="Kata Laluan" required>
+          </div>
+          <div class="pass-link">
+            <a href="#" id="forgotPasswordLink">Lupa kata laluan?</a>
+          </div>
+          <div class="field btn">
+            <div class="btn-layer"></div>
+            <input type="submit" value="Login">
+          </div>
+          <div class="signup-link">Bukan ahli? <a href="#" id="switchToSignupLink">Daftar sekarang</a></div> </form>
+
+        <form id="signup-form" class="signup">
+          <div class="field">
+            <input type="text" id="firstName" placeholder="Nama Pertama" required>
+          </div>
+          <div class="field">
+            <input type="text" id="lastName" placeholder="Nama Akhir" required>
+          </div>
+          <div class="field">
+            <input type="email" id="signupEmail" placeholder="Alamat Emel" required>
+          </div>
+          <div class="field">
+            <input type="password" id="signupPassword" placeholder="Kata Laluan" required>
+          </div>
+          <div class="field">
+            <input type="password" id="confirmPassword" placeholder="Sahkan Kata Laluan" required> </div>
+          <div class="field btn">
+            <div class="btn-layer"></div>
+            <input type="submit" value="Daftar">
+          </div>
+          <div class="login-link" style="margin-top: 10px; text-align: center;">Sudah ada akaun? <a href="#" id="switchToLoginLink">Login sekarang</a></div> </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="message-area" id="message-area"></div>
+
+  <script>
+    const loginText = document.querySelector(".title-text .login"); // Lebih spesifik
+    const signupText = document.querySelector(".title-text .signup"); // Tajuk signup
+    const formInner = document.querySelector(".form-inner");
+    const loginRadio = document.getElementById("loginRadio");
+    const signupRadio = document.getElementById("signupRadio");
+    const switchToSignupLink = document.getElementById("switchToSignupLink");
+    const switchToLoginLink = document.querySelector("#signup-form .login-link a"); // Pautan dari borang daftar ke login
+    const slideControls = document.querySelector(".slide-controls"); // Untuk akses slider-tab
+
+    signupRadio.onchange = () => { // Guna onchange untuk radio button
+      if(signupRadio.checked){
+        formInner.style.marginLeft = "-100%";
+        // loginText.style.marginLeft = "-100%"; // Ini akan menggerakkan keseluruhan title-text
+        document.querySelector(".title-text").style.marginLeft = "-100%";
+        slideControls.querySelector(".slider-tab").style.left = "50%";
+      }
+    };
+    loginRadio.onchange = () => { // Guna onchange
+      if(loginRadio.checked){
+        formInner.style.marginLeft = "0%";
+        // loginText.style.marginLeft = "0%";
+        document.querySelector(".title-text").style.marginLeft = "0%";
+        slideControls.querySelector(".slider-tab").style.left = "0%";
+      }
+    };
+    switchToSignupLink.onclick = e => {
+      e.preventDefault();
+      signupRadio.checked = true;
+      // signupRadio.click(); // Tidak perlu click(), onchange akan dicetuskan oleh perubahan checked
+      signupRadio.dispatchEvent(new Event('change')); // Cetuskan event change secara manual
+    };
+
+    // Pautan dari borang daftar untuk kembali ke login
+    if(switchToLoginLink) { // Pastikan elemen wujud
+        switchToLoginLink.onclick = e => {
+            e.preventDefault();
+            loginRadio.checked = true;
+            // loginRadio.click();
+            loginRadio.dispatchEvent(new Event('change'));
+        };
+    }
+
+  </script>
+  <script type="module" src="./auth.js"></script>
+
+</body>
+</html>
